@@ -2,6 +2,23 @@ import Vue from "vue";
 import firebase from "@/plugins/firebase.js";
 const db = firebase.firestore();
 
+
+Vue.prototype.$createUser = async function createUser(name) {
+  const random = Math.floor(Math.random() * 100)
+  console.log(`random number is ${random}`);
+  await db.collection("users").add({
+    name: this.name,
+    random: random
+  }).then((docRef) => {
+    console.log(`Document written with ID: ${docRef.id}`);
+    this.name = "";
+    alert("success!")
+  })
+  .catch((error) => {
+    console.error(`Error adding document: ${error}`);
+  });
+}
+
 Vue.prototype.$getRandomUser = async function getRandomUser() {
   // randomは80~90の値
   let random = Math.floor(Math.random() * 90)
@@ -27,5 +44,6 @@ Vue.prototype.$getRandomUser = async function getRandomUser() {
 }
 
 export default (context) => {
+  context.$createUser = Vue.prototype.$createUser;
   context.$getRandomUser = Vue.prototype.$getRandomUser;
 }

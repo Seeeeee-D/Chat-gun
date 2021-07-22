@@ -12,9 +12,6 @@
 </template>
 
 <script>
-import firebase from "@/plugins/firebase.js";
-const db = firebase.firestore();
-
 export default {
   data () {
     return {
@@ -23,21 +20,8 @@ export default {
   },
   methods: {
     async createUser(){
-        //ユーザーデータを登録
-      let random = Math.floor(Math.random() * 100)
-      console.log("random is" + random)
-      const write = await db.collection("users").add({
-        name: this.name,
-        random: random
-      }).then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
-        this.name = ""
-        alert("success!")
-      })
-      .catch((error) => {
-        console.error("Error adding document: ", error);
-      });
-  },
+      await this.$createUser(this.name);
+    }
   }
 }
 </script>
