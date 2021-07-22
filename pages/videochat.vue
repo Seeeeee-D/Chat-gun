@@ -36,10 +36,10 @@ export default {
       theirStream: null,
     }
   },
-  async created() {
+  mounted() {
     let Peer;
     if (process.client) {
-      Peer = await require('skyway-js')
+      Peer = require('skyway-js')
     }
 
     // ユーザーのカメラと音声情報を取得
