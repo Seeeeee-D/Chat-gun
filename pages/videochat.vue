@@ -1,132 +1,86 @@
 <template>
-  <section class="container">
-    <div>
-      <video id="their-video" width="200" autoplay playsinline></video>
-      <video id="my-video" muted="true" width="200" autoplay playsinline></video>
+  <div>
+    <video @loadeddata="onLoadedData" :srcObject.prop="myStream" id="my-video" width='400px' autoplay muted playsinline></video>
+    <p id="my-id">{{ peerId }}</p>
 
-      <div class="main">
-        <h2>Nuxt.js + SkyWayのビデオチャット</h2>
-        マイク:
-        <select v-model="selectedAudio" @change="onChange">
-          <option disabled value="">Please select one</option>
-          <option v-for="(audio, key, index) in audios" v-bind:key="index" :value="audio.value">
-            {{ audio.text }}
-          </option>
-        </select>
-
-        カメラ:
-        <select v-model="selectedVideo" @change="onChange">
-          <option disabled value="">Please select one</option>
-          <option v-for="(video, key, index) in videos" v-bind:key="index" :value="video.value">
-            {{ video.text }}
-          </option>
-        </select>
-
-        <div>
-          <p>
-            Your id: <span id="my-id">{{peerId}}</span>
-          </p>
-          <p>他のブラウザでこのIDをコールしましょう。</p>
-          <h3>コールする</h3>
-          <input v-model="calltoid" placeholder="call id" />
-          <button @click="makeCall" class="button--green">Call</button>
-        </div>
-      </div>
-    </div>
-  </section>
+    <textarea id="their-id" v-model="theirId"></textarea>
+    <button id="make-call" @click="makeCall">発信</button>
+    <video @loadeddata="onLoadedData" :srcObject.prop="theirStream" id="their-video" width="400px" autoplay muted></video>
+  </div>
 </template>
 
 <script>
 export default {
-  components: {
-  },
-
-  data () {
+  name: 'Home',
+  data() {
     return {
-      APIKey: process.env.NUXT_ENV_SKYWAY_KEY,
-      selectedAudio: '',
-      selectedVideo: '',
-      audios: [],
-      videos: [],
+      // 自分の通話上のID
+      peerId: "",
+
+      // 相手のID
+      theirId: "",
+
+      // 自分のカメラ情報
       localStream: null,
-      peerId: '',
-      calltoid: ''
+
+      // Peerインスタンス用
+      peer: null,
+
+      // 通話をかける際に必要
+      mediaConnection: null,
+
+      // 自分のカメラ情報
+      myStream: null,
+
+      // 相手のカメラ情報
+      theirStream: null,
     }
   },
-
-  methods: {
-    onChange: function () {
-      if(this.selectedAudio != '' && this.selectedVideo != ''){
-        this.connectLocalCamera();
-      }
-    },
-
-    connectLocalCamera: async function(){
-      const constraints = {
-        audio: this.selectedAudio ? { deviceId: { exact: this.selectedAudio } } : false,
-        video: this.selectedVideo ? { deviceId: { exact: this.selectedVideo } } : false
-      }
-
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      document.getElementById('my-video').srcObject = stream;
-      this.localStream = stream;
-    },
-
-    makeCall: function () {
-      console.log('makeCall');
-      const call = this.peer.call(this.calltoid, this.localStream);
-      this.connect(call);
-    },
-
-    connect: function (call) {
-      call.on('stream', stream => {
-        const el = document.getElementById('their-video');
-        el.srcObject = stream;
-        el.play();
-      });
-    }
-  },
-
-  mounted: function () {
+  async created() {
     let Peer;
     if (process.client) {
-      Peer = require('skyway-js');
+      Peer = await require('skyway-js')
     }
 
+    // ユーザーのカメラと音声情報を取得
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      .then(stream => {
+        this.myStream = stream
+        this.localStream = stream;
+      }).catch(error => {
+        console.error(error);
+        return;
+      })
+
+    // インスタンスの初期化
     this.peer = new Peer({
-      key:   this.APIKey,
+      key: process.env.NUXT_ENV_SKYWAY_KEY, //自身のAPIキー
       debug: 3,
-    });
-
-    this.peer.on('open', () => {
-      this.peerId = this.peer.id
-    });
-
-    this.peer.on('call', call => {
-      call.answer(this.localStream);
-      this.connect(call);
-    });
-
-    //デバイスへのアクセス
-    navigator.mediaDevices.enumerateDevices()
-    .then((deviceInfos) => {
-      for (let i = 0; i !== deviceInfos.length; ++i) {
-        const deviceInfo = deviceInfos[i]
-        if (deviceInfo.kind === 'audioinput') {
-          this.audios.push({
-            text: deviceInfo.label ||
-            `Microphone ${this.audios.length + 1}`,
-            value: deviceInfo.deviceId
-          })
-        } else if (deviceInfo.kind === 'videoinput') {
-          this.videos.push({
-            text: deviceInfo.label ||
-            `Camera  ${this.videos.length - 1}`,
-            value: deviceInfo.deviceId
-          })
-        }
-      }
     })
-  }
+
+    // サーバーに接続できたときに発火
+    this.peer.on('open', () => {
+      this.peerId = this.peer.id;
+    })
+    // 通話がかかってきたときに発火する
+    this.peer.on('call', mediaConnection => {
+      mediaConnection.answer(this.localStream);
+    })
+  },
+  methods: {
+    // 通話の開始
+    makeCall() {
+      // 相手のIDと自分のカメラ情報を渡して通話開始
+      this.mediaConnection = this.peer.call(this.theirId, this.localStream);
+      // メディア情報を取得したときに発火
+      this.mediaConnection.on('stream', stream => {
+        this.theirStream = stream;
+      })
+    },
+    // カメラ情報を取得できたら、描画。
+    onLoadedData(event) {
+      event.target.play();
+    },
+  },
 }
 </script>
