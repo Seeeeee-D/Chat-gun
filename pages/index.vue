@@ -1,16 +1,13 @@
 <template>
   <div>
     <h1>Chat-gun</h1>
-    <button type="button" @click="buttonClicked">通話相手を見つける</button>
+    <NuxtLink to="/matching" class="button">通話相手を見つける</NuxtLink>
   </div>
 </template>
 
 <script>
 export default {
   methods: {
-    buttonClicked:function () {
-      console.log("Calling...")
-    }
   }
 }
 </script>
