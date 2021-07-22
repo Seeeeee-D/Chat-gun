@@ -19,17 +19,11 @@ Vue.prototype.$createUser = async function createUser(name) {
   });
 }
 
-Vue.prototype.$getRandomUser = async function getRandomUser() {
-  // randomは80~90の値
-  let random = Math.floor(Math.random() * 90)
-  if (random < 80) {
-    random = 80
-  }
-  // firestoreのデータ，usersのdocument達のrandomは0~100の値が入っている．
+Vue.prototype.$getRandomUser = async function getRandomUser(random) {
   let randomUser = "";
   await db
       .collection("users")
-      .where("random", ">" , random)
+      .where("random", ">", random)
       .limit(1)
       .get()
       .then((querySnapshot) => {

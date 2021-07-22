@@ -10,7 +10,10 @@
 <script>
 export default {
   async asyncData({ params, $getRandomUser }) {
-    const randomUser = await $getRandomUser();
+    const randomNum = Math.floor(Math.random() * 100);
+    const randomUser = await $getRandomUser(randomNum);
+    console.log(`randomNum: ${randomNum}`);
+    console.log(`randomUser: ${JSON.stringify(randomUser)}`);
     return {
       matchedUser: randomUser
     };
