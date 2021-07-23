@@ -2,12 +2,8 @@
   <div>
     <h1>マッチングしました</h1>
     <h2>name: {{ matchedUser.name }}</h2>
-<<<<<<< HEAD
     <NuxtLink :to="{name: 'calling', params: { docId: this.docId } }" class="button">通話する</NuxtLink>
-=======
     <h2>id: {{ matchedUser.id }}</h2>
-    <NuxtLink to="/calling" class="button">通話する</NuxtLink>
->>>>>>> hub/video_id
     <NuxtLink to="/" class="button">トップへ戻る</NuxtLink>
   </div>
 </template>
