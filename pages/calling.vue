@@ -100,7 +100,6 @@ export default {
       dataConnection: null,
       message: '',
       messages: [],
-      callerId: '',
       matchedUser: {}
     }
   },
@@ -172,15 +171,13 @@ export default {
       }
     },
     async initPeer() {
-      this.peer = new Peer(this.callerId, {
+      this.peer = new Peer({
         key: API_KEY,
         debug: 3
       })
       // https://webrtc.ecl.ntt.com/api-reference/javascript.html#event-open
       this.peer.on('open', () => {
         this.srcId = this.peer.id
-
-        //疑問:ここでcreateUser(this.peer.id,user.name)はまずい？
       })
       // https://webrtc.ecl.ntt.com/api-reference/javascript.html#event-call
       this.peer.on('call', (mediaConnection) => {
@@ -216,6 +213,8 @@ export default {
       if (!this.destId || !this.peer?.open) {
         return
       }
+      this.$updateUserIsMatch(this.srcId)
+      this.$updateUserIsMatch(this.matchedUser.id)
       console.log({ msg: '発信' })
       // MediaConnection(動画/音声) の確立
       // https://webrtc.ecl.ntt.com/api-reference/javascript.html#call-peerid-stream-options
@@ -296,7 +295,7 @@ export default {
       this.dataConnection = null
     },
     finishCalling: async function () {
-      await this.$deleteUser(this.callerId)
+      await this.$deleteUser(this.srcId)
       // トップページに戻す処理
       this.$router.push('/')
     }

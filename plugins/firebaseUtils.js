@@ -4,14 +4,13 @@ const db = firebase.firestore();
 
 
 Vue.prototype.$createUser = async function createUser(id, name) {
-  // let refId = await db.collection("users").doc().id;
   const random = Math.floor(Math.random() * 100)
   console.log(`random number is ${random}`);
   return await db.collection("users").doc(id).set({
     id: id,
     name: name,
     random: random,
-    isMatched: true
+    isMatched: false
   }).then(() => {
     console.log(`Document written with ID: ${id}`);
     return id;
@@ -86,10 +85,26 @@ Vue.prototype.$deleteUser = async function deleteUser(docId) {
   });
 }
 
+Vue.prototype.$updateUserIsMatch = async function updateUserIsMatch(docId) {
+  await db
+    .collection("users")
+    .doc(docId)
+    .update({
+      isMatched: true
+    })
+    .then(() => {
+      console.log("isMatched Update!");
+    })
+    .catch((error) => {
+      console.error("Error removing document: ", error);
+  });
+}
+
 export default (context) => {
   context.$createUser = Vue.prototype.$createUser;
   context.$getRandomUser = Vue.prototype.$getRandomUser;
   context.$deleteUser = Vue.prototype.$deleteUser;
   context.$userListen = Vue.prototype.$userListen;
   context.$getMatchedUsers = Vue.prototype.$getMatchedUsers;
+  context.$updateUserIsMatch = Vue.prototype.$updateUserIsMatch;
 }
