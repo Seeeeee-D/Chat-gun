@@ -38,6 +38,26 @@ Vue.prototype.$getRandomUser = async function getRandomUser(random) {
   return randomUser;
 }
 
+Vue.prototype.$getMatchedUsers = async function getMatchedUsers(travelingTime) {
+  const matchedUsers = [];
+  await db
+    .collection("users")
+    .where("isMatched", "==", false)
+    .limit(1)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((data) => {
+        console.log("data", data)
+        matchedUsers.push(data.data())
+      });
+      console.log(matchedUsers);
+    })
+    .catch(() => {
+      alert("firestoreからのデータの取得でエラーが発生しました");
+    });
+  return matchedUsers;
+}
+
 Vue.prototype.$deleteUser = async function deleteUser(docId) {
   await db
     .collection("users")
@@ -55,4 +75,5 @@ export default (context) => {
   context.$createUser = Vue.prototype.$createUser;
   context.$getRandomUser = Vue.prototype.$getRandomUser;
   context.$deleteUser = Vue.prototype.$deleteUser;
+  context.$getMatchedUsers = Vue.prototype.$getMatchedUsers;
 }
