@@ -59,7 +59,11 @@
             <div v-show="isDest" class="column is-12">
               <div class="field">
                 <div class="control is-expanded">
-                  <input v-model="userInputs.name" placeholder="自分の目的地を入れてね" class="input is-fullwidth" />
+                  <input
+                    v-model="userInputs.destination"
+                    placeholder="自分の目的地を入れてね"
+                    class="input is-fullwidth"
+                  />
                 </div>
               </div>
             </div>
