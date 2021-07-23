@@ -7,7 +7,7 @@
     <button @click="createUser">登録</button>
 
     <h3>2.その後，通話相手を見つけるボタンを押してください</h3>
-    <NuxtLink to="/matching" class="button">通話相手を見つける</NuxtLink>
+    <NuxtLink :to="{name: 'matching', params: { docId: this.docId } }" class="button">通話相手を見つける</NuxtLink>
   </div>
 </template>
 
@@ -15,13 +15,15 @@
 export default {
   data () {
     return {
-      name: ""
+      name: "",
+      docId: "",
     }
   },
   methods: {
     async createUser(){
-      await this.$createUser(this.name);
-    }
+      let docId = await this.$createUser(this.name);
+      this.docId = docId;
+    },
   }
 }
 </script>
