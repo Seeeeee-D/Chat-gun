@@ -2,7 +2,7 @@
   <div>
     <h1>マッチングしました</h1>
     <h2>name: {{ matchedUser.name }}</h2>
-    <NuxtLink to="/calling" class="button">通話する</NuxtLink>
+    <NuxtLink :to="{name: 'calling', params: { docId: this.docId } }" class="button">通話する</NuxtLink>
     <NuxtLink to="/" class="button">トップへ戻る</NuxtLink>
   </div>
 </template>
@@ -15,14 +15,9 @@ export default {
     console.log(`randomNum: ${randomNum}`);
     console.log(`randomUser: ${JSON.stringify(randomUser)}`);
     return {
+      docId: params.docId,
       matchedUser: randomUser
     };
-  },
-  data() {
-  },
-  async created() {
-  },
-  methods: {
   },
 }
 </script>
