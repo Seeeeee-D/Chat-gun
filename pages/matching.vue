@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>マッチングしました</h1>
-    <h2>name: {{ matchedUser }}</h2>
+    <h2>name: {{ matchedUser.name }}</h2>
     <NuxtLink to="/calling" class="button">通話する</NuxtLink>
     <NuxtLink to="/" class="button">トップへ戻る</NuxtLink>
   </div>
@@ -9,24 +9,20 @@
 
 <script>
 export default {
-  data() {
+  async asyncData({ params, $getRandomUser }) {
+    const randomNum = Math.floor(Math.random() * 100);
+    const randomUser = await $getRandomUser(randomNum);
+    console.log(`randomNum: ${randomNum}`);
+    console.log(`randomUser: ${JSON.stringify(randomUser)}`);
     return {
-      users: [
-        "サイトウさん",
-        "Aさん",
-        "Bさん"
-      ],
-      matchedUser: "",
-    }
+      matchedUser: randomUser
+    };
   },
-  created() {
-    this.matchedUser = this.selectRandomUser();
+  data() {
+  },
+  async created() {
   },
   methods: {
-    selectRandomUser: function(){
-      let index = Math.floor(Math.random() * this.users.length)
-      return this.users[index]
-    }
   },
 }
 </script>
