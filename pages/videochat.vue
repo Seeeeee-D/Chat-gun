@@ -144,7 +144,7 @@ export default {
       }
     },
     initPeer() {
-      this.peer = new Peer({
+      this.peer = new Peer("0z6lfC6XaJNeeN6upavm",{
         key: API_KEY,
         debug: 3
       })
