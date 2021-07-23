@@ -1,8 +1,8 @@
 <template>
   <div class="p2p">
-    <h2>P2P (example)</h2>
+    <h2>通話画面</h2>
     <div id="me">
-      <h3>Source (You)</h3>
+      <h3>あなたの設定</h3>
       <video id="my-video" width="400px" autoplay muted playsinline :srcObject.prop="stream" v-if="stream" />
       <!-- 接続オプション -->
       <div>
@@ -29,18 +29,14 @@
         </div>
       </div>
       <p>My Peer ID: {{ srcId }}</p>
+      <p>My dest ID: {{ matchedUser.id }}</p>
     </div>
     <div id="dest">
-      <!-- 接続先 -->
-      <div>
-        <label for="dest-id">Destination Peer ID</label>
-        <input type="text" id="dest-id" v-model="destId" />
-      </div>
       <div>
         <button id="make-call" @click="callAndConnect" v-if="!mediaConnection">発信</button>
         <button id="close" @click="close" v-if="mediaConnection">切断</button>
       </div>
-      <h3>Destination</h3>
+      <h3>電話相手</h3>
       <video id="dest-video" width="400px" autoplay playsinline :srcObject.prop="remoteStream" v-if="remoteStream" />
       <!-- ミュート -->
       <div v-if="remoteStream">
@@ -51,6 +47,10 @@
           <label><input type="checkbox" v-model="mute.remote.audio" @change="muteMedia" />Audio を Off</label>
         </div>
       </div>
+    </div>
+    <div>
+      <h1>通話中...</h1>
+      <button @click="finishCalling">通話終了</button>
     </div>
     <div id="messages">
       <div v-if="dataConnection">
@@ -73,6 +73,13 @@ const API_KEY = process.env.NUXT_ENV_SKYWAY_KEY || ''
 export default {
   name: 'P2P',
   components: {},
+  async asyncData({ params }) {
+    console.log(`Passed docId: ${params.docId}`);
+    return {
+      docId: params.docId,
+      matchedUser: params.matchedUser
+    };
+  },
   data() {
     return {
       peer: null,
@@ -144,7 +151,7 @@ export default {
       }
     },
     initPeer() {
-      this.peer = new Peer("0z6lfC6XaJNeeN6upavm",{
+      this.peer = new Peer(this.docId, {
         key: API_KEY,
         debug: 3
       })
@@ -182,6 +189,7 @@ export default {
       })
     },
     callAndConnect() {
+      this.destId = this.matchedUser.id;
       if (!this.destId || !this.peer?.open) {
         return
       }
@@ -263,6 +271,11 @@ export default {
       // https://webrtc.ecl.ntt.com/api-reference/javascript.html#close-forceclose-2
       this.dataConnection?.close(true)
       this.dataConnection = null
+    },
+    finishCalling: async function () {
+      await this.$deleteUser(thisdocId);
+      // トップページに戻す処理
+      this.$router.push("/");
     }
   }
 }
