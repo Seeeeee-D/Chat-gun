@@ -90,7 +90,7 @@ export default {
     return {
       isDest: false,
       userInputs: {
-        name: '',
+        name: 'かえる',
         travelingTime: -1,
         mobility: 'all',
         destination: ''
