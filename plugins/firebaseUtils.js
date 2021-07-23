@@ -9,7 +9,7 @@ Vue.prototype.$createUser = async function createUser(name) {
   console.log(`random number is ${random}`);
   return await db.collection("users").doc(refId).set({
     id: refId,
-    name: this.name,
+    name: name,
     random: random,
   }).then(() => {
     console.log(`Document written with ID: ${refId}`);
@@ -58,6 +58,20 @@ Vue.prototype.$getMatchedUsers = async function getMatchedUsers(travelingTime) {
   return matchedUsers;
 }
 
+
+Vue.prototype.$userListen = async function userListen() {
+  var listenUser = "";
+  await db
+      .collection("users")
+      .doc("iB1a34lRXTmwlmiCfqFO")
+      .onSnapshot((doc) => {
+        //一番最初の取得が表示される．
+        //データに変更があるとここが走る
+        console.log("Current data: ", doc.data());
+      })
+  return listenUser;
+}
+
 Vue.prototype.$deleteUser = async function deleteUser(docId) {
   await db
     .collection("users")
@@ -75,5 +89,6 @@ export default (context) => {
   context.$createUser = Vue.prototype.$createUser;
   context.$getRandomUser = Vue.prototype.$getRandomUser;
   context.$deleteUser = Vue.prototype.$deleteUser;
+  context.$userListen = Vue.prototype.$userListen;
   context.$getMatchedUsers = Vue.prototype.$getMatchedUsers;
 }

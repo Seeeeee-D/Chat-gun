@@ -29,7 +29,7 @@
         </div>
       </div>
       <p>My Peer ID: {{ srcId }}</p>
-      <p>My dest ID: {{ matchedUser.id }}</p>
+      <!-- <p>My dest ID: {{ matchedUser.id }}</p> -->
     </div>
     <div id="dest">
       <div>
@@ -74,10 +74,11 @@ export default {
   name: 'P2P',
   components: {},
   async asyncData({ params }) {
-    console.log(`params.user: ${JSON.stringify(params.user)}`)
+    console.log(`Passed userInputs: ${JSON.stringify(params.userInputs)}`)
     return {
-      docId: params.docId,
-      matchedUser: params.matchedUser
+      user: params.userInputs,
+      docId: 'hoge',
+      matchedUser: 'fuga'
     }
   },
   data() {
@@ -98,19 +99,32 @@ export default {
       mediaConnection: null,
       dataConnection: null,
       message: '',
-      messages: []
+      messages: [],
+      callerId: ''
     }
   },
   async created() {
     const devices = (await navigator?.mediaDevices?.enumerateDevices()) || []
     this.videos = devices.filter((device) => device.kind === 'videoinput')
     this.audios = devices.filter((device) => device.kind === 'audioinput')
+    let matchedUsers = await this.$getMatchedUsers()
+    if (matchedUsers.length > 0) {
+      // 1人でも条件に合うユーザが見つかる
+      console.log(`Matched: ${JSON.stringify(matchedUsers)}`)
+    } else {
+      this.createUserData()
+      console.log('createUserData() called.')
+    }
   },
   mounted() {
     this.initVideo()
     this.initPeer()
   },
   methods: {
+    async createUserData() {
+      // 作成したuserのIdが帰ってくる
+      this.callerId = await this.$createUser(this.user.name)
+    },
     async initVideo() {
       const constraints = {
         video: this.selectedVideo ? { deviceId: { exact: this.selectedVideo } } : false,
@@ -189,7 +203,7 @@ export default {
       })
     },
     callAndConnect() {
-      this.destId = this.matchedUser.id
+      // this.destId = this.matchedUser.id
       if (!this.destId || !this.peer?.open) {
         return
       }
@@ -273,7 +287,7 @@ export default {
       this.dataConnection = null
     },
     finishCalling: async function () {
-      await this.$deleteUser(this.docId)
+      await this.$deleteUser(this.callerId)
       // トップページに戻す処理
       this.$router.push('/')
     }
