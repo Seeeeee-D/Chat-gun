@@ -59,11 +59,11 @@ Vue.prototype.$getMatchedUsers = async function getMatchedUsers(travelingTime) {
 }
 
 
-Vue.prototype.$userListen = async function userListen() {
+Vue.prototype.$userListen = async function userListen(id) {
   var listenUser = "";
   await db
       .collection("users")
-      .doc("iB1a34lRXTmwlmiCfqFO")
+      .doc(id)
       .onSnapshot((doc) => {
         //一番最初の取得が表示される．
         //データに変更があるとここが走る

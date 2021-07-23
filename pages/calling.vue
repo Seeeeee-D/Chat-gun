@@ -1,72 +1,94 @@
 <template>
   <div class="p2p">
-    <div v-show="!isReady">
+    <!-- <div v-show="">
       <progress class="progress is-small is-primary" max="100">15%</progress>
       <section class="hero is-primary is-fullheight">
         <div class="hero-body">
           <div class="">
-            <p class="title">接続中。。。</p>
+            <p class="title">接続待機中。。。</p>
           </div>
         </div>
       </section>
-    </div>
-    <div v-show="isReady" class="container is-max-desktop mt-5 mx-5">
-      <div id="me">
-        <h3>あなたの設定</h3>
-        <video id="my-video" width="400px" autoplay muted playsinline :srcObject.prop="stream" v-if="stream" />
-        <!-- 接続オプション -->
-        <div>
-          <label>Video</label>
-          <select v-model="selectedVideo" @change="resetVideo" v-if="videos.length > 0">
-            <option :value="null" selected>なし</option>
-            <option :value="video.deviceId" v-for="(video, i) in videos" :key="i">{{ video.label }}</option>
-          </select>
-        </div>
-        <div>
-          <label>Audio</label>
-          <select v-model="selectedAudio" @change="resetVideo" v-if="audios.length > 0">
-            <option :value="null" selected>なし</option>
-            <option :value="audio.deviceId" v-for="(audio, i) in audios" :key="i">{{ audio.label }}</option>
-          </select>
-        </div>
-        <!-- ミュート -->
-        <div>
+    </div> -->
+    <div class="columns is-centered">
+      <div class="container is-max-desktop mt-5 mx-5">
+        <section class="hero is-small is-primary">
+          <div class="hero-body">
+            <div class="container has-text-centered">
+              <p class="title">通話中。。。</p>
+            </div>
+          </div>
+        </section>
+        <div id="me">
+          <div class="is-size-4">通話相手: {{ matchedUser.name }} さん</div>
+          <div class="columns is-centered">
+            <div class="column">
+              <div class="box">
+                <video
+                  id="dest-video"
+                  width="800px"
+                  autoplay
+                  playsinline
+                  :srcObject.prop="remoteStream"
+                  v-if="remoteStream"
+                />
+              </div>
+            </div>
+          </div>
+          <h3>あなたの設定</h3>
+          <video id="my-video" width="400px" autoplay muted playsinline :srcObject.prop="stream" v-if="stream" />
+          <!-- 接続オプション -->
           <div>
-            <label><input type="checkbox" v-model="mute.local.video" @change="muteMedia" />Video を Off</label>
+            <label>Video</label>
+            <select v-model="selectedVideo" @change="resetVideo" v-if="videos.length > 0">
+              <option :value="null" selected>なし</option>
+              <option :value="video.deviceId" v-for="(video, i) in videos" :key="i">{{ video.label }}</option>
+            </select>
           </div>
           <div>
-            <label><input type="checkbox" v-model="mute.local.audio" @change="muteMedia" />Audio を Off</label>
+            <label>Audio</label>
+            <select v-model="selectedAudio" @change="resetVideo" v-if="audios.length > 0">
+              <option :value="null" selected>なし</option>
+              <option :value="audio.deviceId" v-for="(audio, i) in audios" :key="i">{{ audio.label }}</option>
+            </select>
+          </div>
+          <!-- ミュート -->
+          <div>
+            <div>
+              <label><input type="checkbox" v-model="mute.local.video" @change="muteMedia" />Video を Off</label>
+            </div>
+            <div>
+              <label><input type="checkbox" v-model="mute.local.audio" @change="muteMedia" />Audio を Off</label>
+            </div>
+          </div>
+          <p>My Peer ID: {{ srcId }}</p>
+          <p>My dest ID: {{ matchedUser.id }}</p>
+        </div>
+        <div id="dest">
+          <!-- <div>
+            <button id="make-call" @click="callAndConnect" v-if="!mediaConnection">発信</button>
+            <button id="close" @click="close" v-if="mediaConnection">切断</button>
+          </div> -->
+
+          <!-- ミュート -->
+          <div v-if="remoteStream">
+            <div>
+              <label><input type="checkbox" v-model="mute.remote.video" @change="muteMedia" />Video を Off</label>
+            </div>
+            <div>
+              <label><input type="checkbox" v-model="mute.remote.audio" @change="muteMedia" />Audio を Off</label>
+            </div>
           </div>
         </div>
-        <p>My Peer ID: {{ srcId }}</p>
-        <p>My dest ID: {{ matchedUser.id }}</p>
-      </div>
-      <div id="dest">
         <div>
-          <button id="make-call" @click="callAndConnect" v-if="!mediaConnection">発信</button>
-          <button id="close" @click="close" v-if="mediaConnection">切断</button>
+          <button @click="finishCalling" class="button is-primary">通話終了</button>
         </div>
-        <h3>電話相手</h3>
-        <video id="dest-video" width="400px" autoplay playsinline :srcObject.prop="remoteStream" v-if="remoteStream" />
-        <!-- ミュート -->
-        <div v-if="remoteStream">
-          <div>
-            <label><input type="checkbox" v-model="mute.remote.video" @change="muteMedia" />Video を Off</label>
+        <div id="messages">
+          <div v-if="dataConnection">
+            <label>Message</label>
+            <input type="text" v-model="message" />
+            <button @click="sendMessage">送信</button>
           </div>
-          <div>
-            <label><input type="checkbox" v-model="mute.remote.audio" @change="muteMedia" />Audio を Off</label>
-          </div>
-        </div>
-      </div>
-      <div>
-        <h1>通話中...</h1>
-        <button @click="finishCalling">通話終了</button>
-      </div>
-      <div id="messages">
-        <div v-if="dataConnection">
-          <label>Message</label>
-          <input type="text" v-model="message" />
-          <button @click="sendMessage">送信</button>
         </div>
       </div>
     </div>
@@ -117,6 +139,10 @@ export default {
       () => [this.$data.srcId, this.$data.matchedUser.id],
       // valueやoldValueの型は上で返した配列になる
       (value, oldValue) => {
+        if (value[0] != null && value[1] == undefined) {
+          this.$userListen(value[0])
+          // 変更監視はしてるけど、isMatchが変わった瞬間に発火するイベントをどう取るのか分からなくて、受信側のisReadyを変えるタイミングが分からない
+        }
         if (value[0] != null && value[1] != undefined) {
           console.log('準備ok!')
           this.isReady = true
@@ -328,3 +354,5 @@ export default {
   }
 }
 </script>
+
+<style></style>
