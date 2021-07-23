@@ -13,6 +13,7 @@ Vue.prototype.$createUser = async function createUser(name) {
     random: random,
   }).then(() => {
     console.log(`Document written with ID: ${refId}`);
+    return refId;
   })
   .catch((error) => {
     console.error(`Error adding document: ${error}`);
