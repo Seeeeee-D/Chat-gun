@@ -3,17 +3,18 @@ import Vue from "vue";
 const db = firebase.firestore();
 
 
-Vue.prototype.$createUser = async function createUser(name) {
-  let refId = await db.collection("users").doc().id;
+Vue.prototype.$createUser = async function createUser(id, name) {
+  // let refId = await db.collection("users").doc().id;
   const random = Math.floor(Math.random() * 100)
   console.log(`random number is ${random}`);
-  return await db.collection("users").doc(refId).set({
-    id: refId,
+  return await db.collection("users").doc(id).set({
+    id: id,
     name: name,
     random: random,
+    isMatched: true
   }).then(() => {
-    console.log(`Document written with ID: ${refId}`);
-    return refId;
+    console.log(`Document written with ID: ${id}`);
+    return id;
   })
   .catch((error) => {
     console.error(`Error adding document: ${error}`);

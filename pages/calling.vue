@@ -29,7 +29,7 @@
         </div>
       </div>
       <p>My Peer ID: {{ srcId }}</p>
-      <!-- <p>My dest ID: {{ matchedUser.id }}</p> -->
+      <p>My dest ID: {{ matchedUser.id }}</p>
     </div>
     <div id="dest">
       <div>
@@ -100,31 +100,38 @@ export default {
       dataConnection: null,
       message: '',
       messages: [],
-      callerId: ''
+      callerId: '',
+      matchedUser: {}
     }
   },
   async created() {
     const devices = (await navigator?.mediaDevices?.enumerateDevices()) || []
     this.videos = devices.filter((device) => device.kind === 'videoinput')
     this.audios = devices.filter((device) => device.kind === 'audioinput')
+  },
+  async mounted() {
+    this.initVideo()
+    await this.initPeer()
     let matchedUsers = await this.$getMatchedUsers()
     if (matchedUsers.length > 0) {
       // 1人でも条件に合うユーザが見つかる
       console.log(`Matched: ${JSON.stringify(matchedUsers)}`)
+      // TODO: いっぱいいるmatchedUsersからランダムに一人えらぶ
+      this.matchedUser = matchedUsers[0]
+      console.log(`MatchedUser: ${JSON.stringify(this.matchedUser)}`)
     } else {
-      this.createUserData()
-      console.log('createUserData() called.')
+      console.log(`this.srcId: ${this.srcId}`)
     }
   },
-  mounted() {
-    this.initVideo()
-    this.initPeer()
+  watch: {
+    srcId: function (val) {
+      if (val != null) {
+        this.$createUser(val, this.user.name)
+        console.log(`this.srcId: ${this.srcId}`)
+      }
+    }
   },
   methods: {
-    async createUserData() {
-      // 作成したuserのIdが帰ってくる
-      this.callerId = await this.$createUser(this.user.name)
-    },
     async initVideo() {
       const constraints = {
         video: this.selectedVideo ? { deviceId: { exact: this.selectedVideo } } : false,
@@ -164,14 +171,16 @@ export default {
         this.initVideo()
       }
     },
-    initPeer() {
-      this.peer = new Peer(this.docId, {
+    async initPeer() {
+      this.peer = new Peer(this.callerId, {
         key: API_KEY,
         debug: 3
       })
       // https://webrtc.ecl.ntt.com/api-reference/javascript.html#event-open
       this.peer.on('open', () => {
         this.srcId = this.peer.id
+
+        //疑問:ここでcreateUser(this.peer.id,user.name)はまずい？
       })
       // https://webrtc.ecl.ntt.com/api-reference/javascript.html#event-call
       this.peer.on('call', (mediaConnection) => {
@@ -203,7 +212,7 @@ export default {
       })
     },
     callAndConnect() {
-      // this.destId = this.matchedUser.id
+      this.destId = this.matchedUser.id
       if (!this.destId || !this.peer?.open) {
         return
       }
