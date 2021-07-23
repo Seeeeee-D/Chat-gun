@@ -7,7 +7,12 @@
 
 <script>
 export default {
+  // 渡されたパラメータをDBに登録する
+  async asyncData({ params }) {
+    return {};
+  }
 }
 </script>
 
-<style></style>
+<style>
+</style>
