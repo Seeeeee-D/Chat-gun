@@ -7,34 +7,16 @@ Vue.prototype.$createUser = async function createUser(name) {
   let refId = await db.collection("users").doc().id;
   const random = Math.floor(Math.random() * 100)
   console.log(`random number is ${random}`);
-<<<<<<< HEAD
-  const docId = await db
-    .collection("users")
-    .add({
-      name: this.name,
-      random: random
-    }).then((docRef) => {
-      console.log(`Document written with ID: ${docRef.id}`);
-      return docRef.id;
-    })
-    .catch((error) => {
-      console.error(`Error adding document: ${error}`);
-    });
-  return docId;
-=======
   return await db.collection("users").doc(refId).set({
     id: refId,
     name: this.name,
     random: random,
   }).then(() => {
     console.log(`Document written with ID: ${refId}`);
-    this.name = "";
-    alert("success!")
   })
   .catch((error) => {
     console.error(`Error adding document: ${error}`);
   });
->>>>>>> hub/video_id
 }
 
 Vue.prototype.$getRandomUser = async function getRandomUser(random) {
