@@ -7,6 +7,7 @@
         "start": "nuxt start"
     },
     "dependencies": {
+        "bulma": "^0.9.3",
         "firebase": "^8.7.1",
         "nuxt": "^2.15.7",
         "skyway-js": "^4.4.1"
@@ -18,6 +19,8 @@
         "eslint-loader": "^4.0.2",
         "eslint-plugin-prettier": "^3.4.0",
         "eslint-plugin-vue": "^7.14.0",
-        "prettier": "^2.3.2"
+        "prettier": "^2.3.2",
+        "sass": "^1.35.2",
+        "sass-loader": "10"
     }
 }
