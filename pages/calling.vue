@@ -122,6 +122,9 @@ export default {
       console.log(`this.srcId: ${this.srcId}`)
     }
   },
+  beforeDestroy() {
+    this.$deleteUser(this.srcId)
+  },
   watch: {
     srcId: function (val) {
       if (val != null) {
