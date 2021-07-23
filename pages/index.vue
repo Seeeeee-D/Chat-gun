@@ -26,7 +26,7 @@
             <div class="column is-12">
               <p class="title is-6">Q. 通話したい時間は？</p>
             </div>
-            <div class="column is-12">
+            <div class="column is-11 ml-5">
               <div class="field">
                 <label><input type="radio" v-model="userInputs.travelingTime" value="-1" />何分でも</label>
                 <label><input type="radio" v-model="userInputs.travelingTime" value="15" checked />15分</label>
@@ -38,7 +38,7 @@
             <div class="column is-12">
               <p class="title is-6">Q. 移動手段は？</p>
             </div>
-            <div class="column is-12">
+            <div class="column is-12 ml-5">
               <div class="field">
                 <label><input type="radio" v-model="userInputs.mobility" value="all" />なんでも</label>
                 <label><input type="radio" v-model="userInputs.mobility" value="car" />車</label>
@@ -49,7 +49,7 @@
             <div class="column is-12">
               <p class="title is-6">Q. 目的地は？</p>
             </div>
-            <div class="column is-12">
+            <div class="column is-12 ml-5">
               <div class="field">
                 <label><input type="radio" v-model="isDest" :value="false" />どこでも</label>
                 <label><input type="radio" v-model="isDest" :value="true" />一緒の人</label>
