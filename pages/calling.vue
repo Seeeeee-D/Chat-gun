@@ -74,11 +74,11 @@ export default {
   name: 'P2P',
   components: {},
   async asyncData({ params }) {
-    console.log(`Passed docId: ${params.docId}`);
+    console.log(`params.user: ${JSON.stringify(params.user)}`)
     return {
       docId: params.docId,
       matchedUser: params.matchedUser
-    };
+    }
   },
   data() {
     return {
@@ -189,7 +189,7 @@ export default {
       })
     },
     callAndConnect() {
-      this.destId = this.matchedUser.id;
+      this.destId = this.matchedUser.id
       if (!this.destId || !this.peer?.open) {
         return
       }
@@ -273,9 +273,9 @@ export default {
       this.dataConnection = null
     },
     finishCalling: async function () {
-      await this.$deleteUser(this.docId);
+      await this.$deleteUser(this.docId)
       // トップページに戻す処理
-      this.$router.push("/");
+      this.$router.push('/')
     }
   }
 }
