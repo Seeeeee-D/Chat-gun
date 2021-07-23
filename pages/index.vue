@@ -23,6 +23,7 @@
             <div class="column is-12">
               <p class="title is-4">2. 通話の条件を入力してね！</p>
             </div>
+            <!-- TODO: 条件ガワだけなので、登録とマッチ -->
             <div class="column is-12">
               <p class="title is-6">Q. 通話したい時間は？</p>
             </div>
@@ -71,12 +72,12 @@
                 >通話相手を見つける</NuxtLink
               >
             </div>
-            <div class="column is-2 is-offset-10 mb-3">
-              <figure class="image flog">
-                <img src="~/assets/calling_flog.png" />
-              </figure>
-            </div>
           </div>
+        </div>
+        <div>
+          <figure class="image flog">
+            <img src="~/assets/calling_flog.png" />
+          </figure>
         </div>
       </div>
     </div>
@@ -102,10 +103,10 @@ export default {
 
 <style>
 .flog {
-  max-width: 100px;
-  max-height: 100px;
+  max-width: 120px;
+  max-height: 120px;
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 200px;
+  right: 10%;
 }
 </style>
