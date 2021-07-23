@@ -273,7 +273,7 @@ export default {
       this.dataConnection = null
     },
     finishCalling: async function () {
-      await this.$deleteUser(thisdocId);
+      await this.$deleteUser(this.docId);
       // トップページに戻す処理
       this.$router.push("/");
     }
