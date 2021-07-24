@@ -106,11 +106,13 @@ Vue.prototype.$updateUserIsMatch = async function updateUserIsMatch(docId) {
     })
 }
 
-Vue.prototype.$createDestination = async function createDestination(name) {
+Vue.prototype.$createDestination = async function createDestination(name, userId) {
   await db
     .collection('destinations')
-    .add({
-      name: name
+    .doc(userId)
+    .set({
+      name: name,
+      id: userId
     })
     .then(() => {
       console.log(`Destination created: ${name}`)
