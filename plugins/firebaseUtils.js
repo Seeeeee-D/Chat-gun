@@ -43,23 +43,26 @@ Vue.prototype.$getRandomUser = async function getRandomUser(random) {
   return randomUser
 }
 
-Vue.prototype.$getMatchedUsers = async function getMatchedUsers(travelingTime, destination) {
+Vue.prototype.$getMatchedUsers = async function getMatchedUsers(callerId, travelingTime, destination) {
   const matchedUsers = []
   await db
     .collection('users')
     .where('isMatched', '==', false)
     .where('destination', '==', destination)
     .where('travelingTime', '==', travelingTime)
-    .limit(1)
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((data) => {
-        console.log('data', data)
-        matchedUsers.push(data.data())
+        console.log('basshi', JSON.stringify(data.data()))
+        console.log('basshi', data.id, callerId)
+        if (data.id !== callerId) {
+          matchedUsers.push(data.data())
+        }
       })
-      console.log(matchedUsers)
+      console.log('basshi', JSON.stringify(matchedUsers))
     })
-    .catch(() => {
+    .catch((error) => {
+      console.error('firestoreからのデータの取得でエラーが発生!', error)
       alert('firestoreからのデータの取得でエラーが発生しました')
     })
   return matchedUsers
