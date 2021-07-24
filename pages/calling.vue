@@ -11,7 +11,6 @@
       </section>
     </div>
     <div v-show="isReady" class="columns is-centered">
-      <!-- <div class="columns is-centered"> -->
       <div class="container is-max-desktop mt-5 mx-5">
         <section class="hero is-small is-primary">
           <div class="hero-body">
@@ -143,13 +142,26 @@ export default {
         if (value[0] != null && value[1] == null) {
           this.$createUser(value[0], this.user.name)
         }
-        if (value[0] != null && value[1] != null) {
+        // if (value[0] != null && value[1] != null) {
+        //   console.log('準備ok!')
+        //   this.isReady = true
+        //   this.callAndConnect()
+        //   console.log(this.isReady)
+        // }
+
+        // if (value[0] != null) {
+        //   console.log('準備ok!')
+        //   this.isReady = true
+        //   this.callAndConnect()
+        //   console.log(this.isReady)
+        // }
+        if (value[1] != null) {
           console.log('準備ok!')
           this.isReady = true
           this.callAndConnect()
           console.log(this.isReady)
         }
-        console.log('[srcId, destId] change:', oldValue, '->', value)
+        console.log('[srcId, matchedUser] change:', oldValue, '->', value)
       }
     )
     const devices = (await navigator?.mediaDevices?.enumerateDevices()) || []
@@ -185,6 +197,11 @@ export default {
         } else {
           console.log(`Not matched: this.srcId = ${this.srcId}`)
         }
+      }
+    },
+    destId: function (val) {
+      if (this.srcId && val) {
+        this.isReady = true
       }
     }
   },
