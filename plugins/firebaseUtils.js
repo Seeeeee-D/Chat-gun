@@ -49,6 +49,7 @@ Vue.prototype.$getMatchedUsers = async function getMatchedUsers(travelingTime, d
     .collection('users')
     .where('isMatched', '==', false)
     .where('destination', '==', destination)
+    .where('travelingTime', '==', travelingTime)
     .limit(1)
     .get()
     .then((querySnapshot) => {

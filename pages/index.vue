@@ -69,12 +69,12 @@
 
                   <input
                     class="input"
-                    placeholder="記事に関するタグ"
+                    v-model="userInputs.destination"
+                    placeholder="目的地"
                     name="yourarea"
                     autocomplete="on"
                     list="suggestList"
                   />
-
                   <datalist id="suggestList">
                     <option v-for="(n, index) in suggestList" :key="n + index">
                       {{ n }}
@@ -117,7 +117,6 @@ export default {
       }
     }
   },
-
   async asyncData({ $getAllDestinations }) {
     const allDestinations = await $getAllDestinations()
     console.log(`Destination = ${allDestinations}`)

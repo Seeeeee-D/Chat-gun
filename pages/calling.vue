@@ -159,7 +159,7 @@ export default {
   async mounted() {
     this.initVideo()
     await this.initPeer()
-    let matchedUsers = await this.$getMatchedUsers(this.user.travelingTime, this.user.destination)
+    let matchedUsers = await this.$getMatchedUsers(parseInt(this.user.travelingTime, 10), this.user.destination)
     if (matchedUsers.length > 0) {
       // 1人でも条件に合うユーザが見つかる
       console.log(`Matched: ${JSON.stringify(matchedUsers)}`)
@@ -167,7 +167,7 @@ export default {
       this.matchedUser = matchedUsers[0]
       console.log(`MatchedUser: ${JSON.stringify(this.matchedUser)}`)
     } else {
-      console.log(`this.srcId: ${this.srcId}`)
+      console.log(`Not matched: this.srcId = ${this.srcId}`)
     }
   },
   beforeDestroy() {
@@ -178,7 +178,7 @@ export default {
     srcId: function (val) {
       if (val != null) {
         console.log(`this.destination: ${this.user}`)
-        this.$createUser(val, this.user.name, this.user.destination, this.user.travelingTime)
+        this.$createUser(val, this.user.name, this.user.destination, parseInt(this.user.travelingTime, 10))
         this.$createDestination(this.user.destination)
         console.log(`this.srcId: ${this.srcId}`)
       }
