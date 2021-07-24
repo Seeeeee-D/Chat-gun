@@ -1,6 +1,6 @@
 <template>
   <div class="p2p">
-    <!-- <div v-show="">
+    <div v-show="!isReady">
       <progress class="progress is-small is-primary" max="100">15%</progress>
       <section class="hero is-primary is-fullheight">
         <div class="hero-body">
@@ -9,8 +9,9 @@
           </div>
         </div>
       </section>
-    </div> -->
-    <div class="columns is-centered">
+    </div>
+    <div v-show="isReady" class="columns is-centered">
+      <!-- <div class="columns is-centered"> -->
       <div class="container is-max-desktop mt-5 mx-5">
         <section class="hero is-small is-primary">
           <div class="hero-body">
@@ -62,7 +63,7 @@
             </div>
           </div>
           <p>My Peer ID: {{ srcId }}</p>
-          <p>My dest ID: {{ matchedUser.id }}</p>
+          <p>My dest ID: {{ destId }}</p>
         </div>
         <div id="dest">
           <!-- <div>
@@ -139,11 +140,10 @@ export default {
       () => [this.$data.srcId, this.$data.matchedUser.id],
       // valueやoldValueの型は上で返した配列になる
       (value, oldValue) => {
-        if (value[0] != null && value[1] == undefined) {
-          this.$userListen(value[0])
-          // 変更監視はしてるけど、isMatchが変わった瞬間に発火するイベントをどう取るのか分からなくて、受信側のisReadyを変えるタイミングが分からない
+        if (value[0] != null && value[1] == null) {
+          this.$createUser(value[0], this.user.name)
         }
-        if (value[0] != null && value[1] != undefined) {
+        if (value[0] != null && value[1] != null) {
           console.log('準備ok!')
           this.isReady = true
           this.callAndConnect()
@@ -263,6 +263,7 @@ export default {
       })
     },
     callAndConnect() {
+      console.log(`dest id in callAndCOnnect is..${this.destId}`)
       this.destId = this.matchedUser.id
       if (!this.destId || !this.peer?.open) {
         return
