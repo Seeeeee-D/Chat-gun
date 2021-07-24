@@ -6,6 +6,7 @@
         <div class="hero-body">
           <div class="">
             <p class="title">接続待機中。。。</p>
+            <p class="title">isReady: {{ isReady }}</p>
           </div>
         </div>
       </section>
@@ -17,6 +18,7 @@
           <div class="hero-body">
             <div class="container has-text-centered">
               <p class="title">通話中。。。</p>
+              <p class="title">isReady: {{ isReady }}</p>
             </div>
           </div>
         </section>
@@ -143,13 +145,26 @@ export default {
         if (value[0] != null && value[1] == null) {
           this.$createUser(value[0], this.user.name)
         }
-        if (value[0] != null && value[1] != null) {
+        // if (value[0] != null && value[1] != null) {
+        //   console.log('準備ok!')
+        //   this.isReady = true
+        //   this.callAndConnect()
+        //   console.log(this.isReady)
+        // }
+
+        // if (value[0] != null) {
+        //   console.log('準備ok!')
+        //   this.isReady = true
+        //   this.callAndConnect()
+        //   console.log(this.isReady)
+        // }
+        if (value[1] != null) {
           console.log('準備ok!')
           this.isReady = true
           this.callAndConnect()
           console.log(this.isReady)
         }
-        console.log('[srcId, destId] change:', oldValue, '->', value)
+        console.log('[srcId, matchedUser] change:', oldValue, '->', value)
       }
     )
     const devices = (await navigator?.mediaDevices?.enumerateDevices()) || []
@@ -181,6 +196,11 @@ export default {
         this.$createUser(val, this.user.name, this.user.destination, parseInt(this.user.travelingTime, 10))
         this.$createDestination(this.user.destination)
         console.log(`this.srcId: ${this.srcId}`)
+      }
+    },
+    destId: function (val) {
+      if (this.srcId && val) {
+        this.isReady = true
       }
     }
   },
