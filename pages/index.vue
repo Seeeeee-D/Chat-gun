@@ -123,7 +123,9 @@ export default {
     console.log(`Destination = ${allDestinations}`)
     const suggestList = []
     allDestinations.forEach((destination) => {
-      suggestList.push(destination.name)
+      if (!suggestList.includes(destination.name)) {
+        suggestList.push(destination.name)
+      }
     })
     return {
       suggestList: suggestList
