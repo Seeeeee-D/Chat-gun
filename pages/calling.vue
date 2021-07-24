@@ -4,8 +4,13 @@
       <progress class="progress is-small is-primary" max="100">15%</progress>
       <section class="hero is-primary is-fullheight">
         <div class="hero-body">
-          <div class="">
-            <p class="title">接続待機中。。。</p>
+          <div class="columns is-multiline">
+            <div class="column is-12">
+              <p class="title">接続待機中。。。</p>
+            </div>
+            <div class="column is-12">
+              <button @click="canselCalling" class="button is-primary is-light">通話キャンセル</button>
+            </div>
           </div>
         </div>
       </section>
@@ -38,7 +43,9 @@
           <div class="is-size-4">自分のなまえ : {{ user.name }} さん</div>
           <div class="columns is-multiline">
             <div class="column is-8">
-              <video id="my-video" width="800px" autoplay muted playsinline :srcObject.prop="stream" v-if="stream" />
+              <div class="box">
+                <video id="my-video" width="800px" autoplay muted playsinline :srcObject.prop="stream" v-if="stream" />
+              </div>
             </div>
             <div class="column is-4">
               <div class="columns is-multiline">
@@ -376,6 +383,13 @@ export default {
     },
     finishCalling: async function () {
       await this.$deleteUser(this.srcId)
+      // トップページに戻す処理
+      this.$router.push('/')
+    },
+    canselCalling: async function () {
+      if (this.srcId != null) {
+        await this.$deleteUser(this.srcId)
+      }
       // トップページに戻す処理
       this.$router.push('/')
     }
