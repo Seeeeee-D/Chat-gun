@@ -127,11 +127,23 @@ export default {
 </script>
 
 <style>
-.flog {
-  max-width: 120px;
-  max-height: 120px;
-  position: absolute;
-  bottom: 200px;
-  right: 10%;
+@media screen and (max-width: 480px) {
+  .flog {
+    max-width: 60px;
+    max-height: 60px;
+    position: absolute;
+    top: 30px;
+    right: 5px;
+  }
+}
+
+@media screen and (min-width: 481px) {
+  .flog {
+    max-width: 120px;
+    max-height: 120px;
+    position: absolute;
+    bottom: 200px;
+    right: 10%;
+  }
 }
 </style>
