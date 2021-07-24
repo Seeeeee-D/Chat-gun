@@ -59,11 +59,27 @@
             <div v-show="isDest" class="column is-12">
               <div class="field">
                 <div class="control is-expanded">
+                  <!-- 
                   <input
                     v-model="userInputs.destination"
                     placeholder="自分の目的地を入れてね"
                     class="input is-fullwidth"
                   />
+                   -->
+
+                  <input
+                    class="input"
+                    v-model="userInputs.destination"
+                    placeholder="目的地"
+                    name="yourarea"
+                    autocomplete="on"
+                    list="suggestList"
+                  />
+                  <datalist id="suggestList">
+                    <option v-for="(n, index) in suggestList" :key="n + index">
+                      {{ n }}
+                    </option>
+                  </datalist>
                 </div>
               </div>
             </div>
@@ -99,6 +115,19 @@ export default {
         mobility: 'all',
         destination: ''
       }
+    }
+  },
+  async asyncData({ $getAllDestinations }) {
+    const allDestinations = await $getAllDestinations()
+    console.log(`Destination = ${allDestinations}`)
+    const suggestList = []
+    allDestinations.forEach((destination) => {
+      if (!suggestList.includes(destination.name)) {
+        suggestList.push(destination.name)
+      }
+    })
+    return {
+      suggestList: suggestList
     }
   },
   methods: {}
