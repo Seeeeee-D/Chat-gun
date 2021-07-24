@@ -6,19 +6,16 @@
         <div class="hero-body">
           <div class="">
             <p class="title">接続待機中。。。</p>
-            <p class="title">isReady: {{ isReady }}</p>
           </div>
         </div>
       </section>
     </div>
     <div v-show="isReady" class="columns is-centered">
-      <!-- <div class="columns is-centered"> -->
       <div class="container is-max-desktop mt-5 mx-5">
         <section class="hero is-small is-primary">
           <div class="hero-body">
             <div class="container has-text-centered">
               <p class="title">通話中。。。</p>
-              <p class="title">isReady: {{ isReady }}</p>
             </div>
           </div>
         </section>
