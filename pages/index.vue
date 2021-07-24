@@ -3,7 +3,7 @@
     <section class="hero is-primary">
       <div class="hero-body">
         <p class="title">Chat-gun</p>
-        <p class="subtitle">サービスの説明とか</p>
+        <p class="subtitle">移動中の時間をもっと楽しくする</p>
       </div>
     </section>
     <div class="columns is-centered">
