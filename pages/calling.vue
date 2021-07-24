@@ -11,7 +11,6 @@
       </section>
     </div>
     <div v-show="isReady" class="columns is-centered">
-      <!-- <div class="columns is-centered"> -->
       <div class="container is-max-desktop mt-5 mx-5">
         <section class="hero is-small is-primary">
           <div class="hero-body">
@@ -143,13 +142,26 @@ export default {
         if (value[0] != null && value[1] == null) {
           this.$createUser(value[0], this.user.name)
         }
-        if (value[0] != null && value[1] != null) {
+        // if (value[0] != null && value[1] != null) {
+        //   console.log('準備ok!')
+        //   this.isReady = true
+        //   this.callAndConnect()
+        //   console.log(this.isReady)
+        // }
+
+        // if (value[0] != null) {
+        //   console.log('準備ok!')
+        //   this.isReady = true
+        //   this.callAndConnect()
+        //   console.log(this.isReady)
+        // }
+        if (value[1] != null) {
           console.log('準備ok!')
           this.isReady = true
           this.callAndConnect()
           console.log(this.isReady)
         }
-        console.log('[srcId, destId] change:', oldValue, '->', value)
+        console.log('[srcId, matchedUser] change:', oldValue, '->', value)
       }
     )
     const devices = (await navigator?.mediaDevices?.enumerateDevices()) || []
@@ -159,23 +171,13 @@ export default {
   async mounted() {
     this.initVideo()
     await this.initPeer()
-    let matchedUsers = await this.$getMatchedUsers(parseInt(this.user.travelingTime, 10), this.user.destination)
-    if (matchedUsers.length > 0) {
-      // 1人でも条件に合うユーザが見つかる
-      console.log(`Matched: ${JSON.stringify(matchedUsers)}`)
-      // TODO: いっぱいいるmatchedUsersからランダムに一人えらぶ
-      this.matchedUser = matchedUsers[0]
-      console.log(`MatchedUser: ${JSON.stringify(this.matchedUser)}`)
-    } else {
-      console.log(`Not matched: this.srcId = ${this.srcId}`)
-    }
   },
   beforeDestroy() {
     this.$deleteUser(this.srcId)
     this.close()
   },
   watch: {
-    srcId: function (val) {
+    srcId: async function (val) {
       if (val != null) {
         console.log(`this.destination: ${this.user}`)
         this.$createUser(val, this.user.name, this.user.destination, parseInt(this.user.travelingTime, 10))
@@ -183,6 +185,25 @@ export default {
           this.$createDestination(this.user.destination, val)
         }
         console.log(`this.srcId: ${this.srcId}`)
+        let matchedUsers = await this.$getMatchedUsers(
+          this.srcId,
+          parseInt(this.user.travelingTime, 10),
+          this.user.destination
+        )
+        if (matchedUsers.length > 0) {
+          // 1人でも条件に合うユーザが見つかる
+          console.log(`Matched: ${JSON.stringify(matchedUsers)}`)
+          // TODO: いっぱいいるmatchedUsersからランダムに一人えらぶ
+          this.matchedUser = matchedUsers[0]
+          console.log(`MatchedUser: ${JSON.stringify(this.matchedUser)}`)
+        } else {
+          console.log(`Not matched: this.srcId = ${this.srcId}`)
+        }
+      }
+    },
+    destId: function (val) {
+      if (this.srcId && val) {
+        this.isReady = true
       }
     }
   },
