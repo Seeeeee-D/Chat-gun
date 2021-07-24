@@ -143,6 +143,19 @@ Vue.prototype.$getAllDestinations = async function getAllDestinations() {
   return allDestinations
 }
 
+Vue.prototype.$deleteDestination = async function deleteDestination(docId) {
+  await db
+    .collection('destinations')
+    .doc(docId)
+    .delete()
+    .then(() => {
+      console.log('destination Docuent successfully deleted!')
+    })
+    .catch((error) => {
+      console.error('Error removing document: ', error)
+    })
+}
+
 export default (context) => {
   context.$createUser = Vue.prototype.$createUser
   context.$getRandomUser = Vue.prototype.$getRandomUser
@@ -152,4 +165,5 @@ export default (context) => {
   context.$updateUserIsMatch = Vue.prototype.$updateUserIsMatch
   context.$createDestination = Vue.prototype.$createDestination
   context.$getAllDestinations = Vue.prototype.$getAllDestinations
+  context.$deleteDestination = Vue.prototype.$deleteDestination
 }
