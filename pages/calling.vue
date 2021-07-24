@@ -179,7 +179,9 @@ export default {
       if (val != null) {
         console.log(`this.destination: ${this.user}`)
         this.$createUser(val, this.user.name, this.user.destination, parseInt(this.user.travelingTime, 10))
-        this.$createDestination(this.user.destination)
+        if (this.user.destination !== '') {
+          this.$createDestination(this.user.destination)
+        }
         console.log(`this.srcId: ${this.srcId}`)
       }
     }
