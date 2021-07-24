@@ -118,6 +118,24 @@ Vue.prototype.$createDestination = async function createDestination(name) {
     })
 }
 
+Vue.prototype.$getAllDestinations = async function getAllDestinations() {
+  const allDestinations = []
+  await db
+    .collection('destinations')
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((data) => {
+        console.log('data', data)
+        allDestinations.push(data.data())
+      })
+      console.log(allDestinations)
+    })
+    .catch(() => {
+      alert('firestoreからのデータの取得でエラーが発生しました')
+    })
+  return allDestinations
+}
+
 export default (context) => {
   context.$createUser = Vue.prototype.$createUser
   context.$getRandomUser = Vue.prototype.$getRandomUser
@@ -126,4 +144,5 @@ export default (context) => {
   context.$getMatchedUsers = Vue.prototype.$getMatchedUsers
   context.$updateUserIsMatch = Vue.prototype.$updateUserIsMatch
   context.$createDestination = Vue.prototype.$createDestination
+  context.$getAllDestinations = Vue.prototype.$getAllDestinations
 }

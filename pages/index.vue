@@ -101,6 +101,11 @@ export default {
       }
     }
   },
+
+  async asyncData({ $getAllDestinations }) {
+    const allDestinations = await $getAllDestinations()
+    console.log(`Destination = ${allDestinations}`)
+  },
   methods: {}
 }
 </script>
