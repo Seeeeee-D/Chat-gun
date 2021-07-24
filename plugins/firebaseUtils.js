@@ -2,7 +2,7 @@ import firebase from '@/plugins/firebase.js'
 import Vue from 'vue'
 const db = firebase.firestore()
 
-Vue.prototype.$createUser = async function createUser(id, name, destination, travelingTime) {
+Vue.prototype.$createUser = async function createUser(id, name, destination, travelingTime, mobility) {
   const random = Math.floor(Math.random() * 100)
   console.log(`random number is ${random}`)
   return await db
@@ -14,7 +14,8 @@ Vue.prototype.$createUser = async function createUser(id, name, destination, tra
       random: random,
       isMatched: false,
       destination: destination,
-      travelingTime: travelingTime
+      travelingTime: travelingTime,
+      mobility: mobility
     })
     .then(() => {
       console.log(`Document written with ID: ${id}`)
@@ -43,13 +44,14 @@ Vue.prototype.$getRandomUser = async function getRandomUser(random) {
   return randomUser
 }
 
-Vue.prototype.$getMatchedUsers = async function getMatchedUsers(callerId, travelingTime, destination) {
+Vue.prototype.$getMatchedUsers = async function getMatchedUsers(callerId, travelingTime, destination, mobility) {
   const matchedUsers = []
   await db
     .collection('users')
     .where('isMatched', '==', false)
     .where('destination', '==', destination)
     .where('travelingTime', '==', travelingTime)
+    .where('mobility', '==', mobility)
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((data) => {
