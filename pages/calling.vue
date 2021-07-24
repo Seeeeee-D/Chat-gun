@@ -20,13 +20,13 @@
           </div>
         </section>
         <div id="me">
-          <div class="is-size-4">通話相手: {{ matchedUser.name }} さん</div>
+          <div class="is-size-4">通話相手のなまえ : {{ matchedUser.name }} さん</div>
           <div class="columns is-centered">
             <div class="column">
               <div class="box">
                 <video
                   id="dest-video"
-                  width="800px"
+                  width="1900px"
                   autoplay
                   playsinline
                   :srcObject.prop="remoteStream"
@@ -35,59 +35,63 @@
               </div>
             </div>
           </div>
-          <h3>あなたの設定</h3>
-          <video id="my-video" width="400px" autoplay muted playsinline :srcObject.prop="stream" v-if="stream" />
-          <!-- 接続オプション -->
-          <div>
-            <label>Video</label>
-            <select v-model="selectedVideo" @change="resetVideo" v-if="videos.length > 0">
-              <option :value="null" selected>なし</option>
-              <option :value="video.deviceId" v-for="(video, i) in videos" :key="i">{{ video.label }}</option>
-            </select>
-          </div>
-          <div>
-            <label>Audio</label>
-            <select v-model="selectedAudio" @change="resetVideo" v-if="audios.length > 0">
-              <option :value="null" selected>なし</option>
-              <option :value="audio.deviceId" v-for="(audio, i) in audios" :key="i">{{ audio.label }}</option>
-            </select>
-          </div>
-          <!-- ミュート -->
-          <div>
-            <div>
-              <label><input type="checkbox" v-model="mute.local.video" @change="muteMedia" />Video を Off</label>
+          <div class="is-size-4">自分のなまえ : {{ user.name }} さん</div>
+          <div class="columns is-multiline">
+            <div class="column is-8">
+              <video id="my-video" width="800px" autoplay muted playsinline :srcObject.prop="stream" v-if="stream" />
             </div>
-            <div>
-              <label><input type="checkbox" v-model="mute.local.audio" @change="muteMedia" />Audio を Off</label>
-            </div>
-          </div>
-          <p>My Peer ID: {{ srcId }}</p>
-          <p>My dest ID: {{ destId }}</p>
-        </div>
-        <div id="dest">
-          <!-- <div>
-            <button id="make-call" @click="callAndConnect" v-if="!mediaConnection">発信</button>
-            <button id="close" @click="close" v-if="mediaConnection">切断</button>
-          </div> -->
+            <div class="column is-4">
+              <div class="columns is-multiline">
+                <div class="column is-12">
+                  <div class="is-size-5">自分のカメラ・音声設定</div>
+                </div>
+                <div class="column is-12 ml-4">
+                  <!-- 接続オプション -->
+                  <label>Video</label>
+                  <select v-model="selectedVideo" @change="resetVideo" v-if="videos.length > 0">
+                    <option :value="null" selected>なし</option>
+                    <option :value="video.deviceId" v-for="(video, i) in videos" :key="i">{{ video.label }}</option>
+                  </select>
+                </div>
+                <div class="column is-12 ml-4">
+                  <label>Audio</label>
+                  <select v-model="selectedAudio" @change="resetVideo" v-if="audios.length > 0">
+                    <option :value="null" selected>なし</option>
+                    <option :value="audio.deviceId" v-for="(audio, i) in audios" :key="i">{{ audio.label }}</option>
+                  </select>
+                </div>
+                <div class="column is-12">
+                  <div class="is-size-5">自分のミュート設定</div>
+                </div>
+                <div class="column is-12 ml-4">
+                  <label><input type="checkbox" v-model="mute.local.video" @change="muteMedia" />Video を Off</label>
+                </div>
+                <div class="column is-12 ml-4">
+                  <label><input type="checkbox" v-model="mute.local.audio" @change="muteMedia" />Audio を Off</label>
+                </div>
+                <div v-if="remoteStream">
+                  <div class="column is-12">
+                    <div class="is-size-5">相手のミュート設定</div>
+                  </div>
+                  <div class="column is-12 ml-4">
+                    <label><input type="checkbox" v-model="mute.remote.video" @change="muteMedia" />Video を Off</label>
+                  </div>
+                  <div class="column is-12 ml-4">
+                    <label><input type="checkbox" v-model="mute.remote.audio" @change="muteMedia" />Audio を Off</label>
+                  </div>
+                </div>
+              </div>
+              <!-- ミュート -->
+              <!-- <div>
+                  <button id="make-call" @click="callAndConnect" v-if="!mediaConnection">発信</button>
+                  <button id="close" @click="close" v-if="mediaConnection">切断</button>
+                </div> -->
 
-          <!-- ミュート -->
-          <div v-if="remoteStream">
-            <div>
-              <label><input type="checkbox" v-model="mute.remote.video" @change="muteMedia" />Video を Off</label>
-            </div>
-            <div>
-              <label><input type="checkbox" v-model="mute.remote.audio" @change="muteMedia" />Audio を Off</label>
+              <!-- ミュート -->
             </div>
           </div>
-        </div>
-        <div>
-          <button @click="finishCalling" class="button is-primary">通話終了</button>
-        </div>
-        <div id="messages">
-          <div v-if="dataConnection">
-            <label>Message</label>
-            <input type="text" v-model="message" />
-            <button @click="sendMessage">送信</button>
+          <div class="column is-12 has-text-centered mb-5">
+            <button @click="finishCalling" class="button is-large is-primary">通話終了</button>
           </div>
         </div>
       </div>
