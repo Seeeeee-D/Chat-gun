@@ -104,6 +104,20 @@ Vue.prototype.$updateUserIsMatch = async function updateUserIsMatch(docId) {
     })
 }
 
+Vue.prototype.$createDestination = async function createDestination(name) {
+  await db
+    .collection('destinations')
+    .add({
+      name: name
+    })
+    .then(() => {
+      console.log(`Destination created: ${name}`)
+    })
+    .catch((error) => {
+      console.error('Error create destination: ', error)
+    })
+}
+
 export default (context) => {
   context.$createUser = Vue.prototype.$createUser
   context.$getRandomUser = Vue.prototype.$getRandomUser
@@ -111,4 +125,5 @@ export default (context) => {
   context.$userListen = Vue.prototype.$userListen
   context.$getMatchedUsers = Vue.prototype.$getMatchedUsers
   context.$updateUserIsMatch = Vue.prototype.$updateUserIsMatch
+  context.$createDestination = Vue.prototype.$createDestination
 }
