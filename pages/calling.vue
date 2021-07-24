@@ -168,7 +168,13 @@ export default {
     srcId: async function (val) {
       if (val != null) {
         console.log(`this.destination: ${this.user}`)
-        this.$createUser(val, this.user.name, this.user.destination, parseInt(this.user.travelingTime, 10))
+        this.$createUser(
+          val,
+          this.user.name,
+          this.user.destination,
+          parseInt(this.user.travelingTime, 10),
+          this.user.mobility
+        )
         if (this.user.destination !== '') {
           this.$createDestination(this.user.destination, val)
         }
@@ -176,7 +182,8 @@ export default {
         let matchedUsers = await this.$getMatchedUsers(
           this.srcId,
           parseInt(this.user.travelingTime, 10),
-          this.user.destination
+          this.user.destination,
+          this.user.mobility
         )
         if (matchedUsers.length > 0) {
           // 1人でも条件に合うユーザが見つかる
