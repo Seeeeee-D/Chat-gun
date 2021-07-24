@@ -142,19 +142,6 @@ export default {
         if (value[0] != null && value[1] == null) {
           this.$createUser(value[0], this.user.name)
         }
-        // if (value[0] != null && value[1] != null) {
-        //   console.log('準備ok!')
-        //   this.isReady = true
-        //   this.callAndConnect()
-        //   console.log(this.isReady)
-        // }
-
-        // if (value[0] != null) {
-        //   console.log('準備ok!')
-        //   this.isReady = true
-        //   this.callAndConnect()
-        //   console.log(this.isReady)
-        // }
         if (value[1] != null) {
           console.log('準備ok!')
           this.isReady = true
@@ -174,6 +161,7 @@ export default {
   },
   beforeDestroy() {
     this.$deleteUser(this.srcId)
+    this.$deleteDestination(this.srcId)
     this.close()
   },
   watch: {
@@ -181,7 +169,9 @@ export default {
       if (val != null) {
         console.log(`this.destination: ${this.user}`)
         this.$createUser(val, this.user.name, this.user.destination, parseInt(this.user.travelingTime, 10))
-        this.$createDestination(this.user.destination)
+        if (this.user.destination !== '') {
+          this.$createDestination(this.user.destination, val)
+        }
         console.log(`this.srcId: ${this.srcId}`)
         let matchedUsers = await this.$getMatchedUsers(
           this.srcId,
