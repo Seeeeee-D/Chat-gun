@@ -159,7 +159,7 @@ export default {
   async mounted() {
     this.initVideo()
     await this.initPeer()
-    let matchedUsers = await this.$getMatchedUsers()
+    let matchedUsers = await this.$getMatchedUsers(this.user.travelingTime, this.user.destination)
     if (matchedUsers.length > 0) {
       // 1人でも条件に合うユーザが見つかる
       console.log(`Matched: ${JSON.stringify(matchedUsers)}`)

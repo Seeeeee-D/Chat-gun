@@ -42,11 +42,12 @@ Vue.prototype.$getRandomUser = async function getRandomUser(random) {
   return randomUser
 }
 
-Vue.prototype.$getMatchedUsers = async function getMatchedUsers(travelingTime) {
+Vue.prototype.$getMatchedUsers = async function getMatchedUsers(travelingTime, destination) {
   const matchedUsers = []
   await db
     .collection('users')
     .where('isMatched', '==', false)
+    .where('destination', '==', destination)
     .limit(1)
     .get()
     .then((querySnapshot) => {
