@@ -2,7 +2,7 @@ import firebase from '@/plugins/firebase.js'
 import Vue from 'vue'
 const db = firebase.firestore()
 
-Vue.prototype.$createUser = async function createUser(id, name, destination) {
+Vue.prototype.$createUser = async function createUser(id, name, destination, travelingTime) {
   const random = Math.floor(Math.random() * 100)
   console.log(`random number is ${random}`)
   return await db
@@ -13,7 +13,8 @@ Vue.prototype.$createUser = async function createUser(id, name, destination) {
       name: name,
       random: random,
       isMatched: false,
-      destination: destination
+      destination: destination,
+      travelingTime: travelingTime
     })
     .then(() => {
       console.log(`Document written with ID: ${id}`)

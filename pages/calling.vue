@@ -178,7 +178,7 @@ export default {
     srcId: function (val) {
       if (val != null) {
         console.log(`this.destination: ${this.user}`)
-        this.$createUser(val, this.user.name, this.user.destination)
+        this.$createUser(val, this.user.name, this.user.destination, this.user.travelingTime)
         this.$createDestination(this.user.destination)
         console.log(`this.srcId: ${this.srcId}`)
       }
