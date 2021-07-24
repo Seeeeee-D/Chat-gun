@@ -177,7 +177,8 @@ export default {
   watch: {
     srcId: function (val) {
       if (val != null) {
-        this.$createUser(val, this.user.name)
+        console.log(`this.destination: ${this.user}`)
+        this.$createUser(val, this.user.name, this.user.destination)
         console.log(`this.srcId: ${this.srcId}`)
       }
     }
